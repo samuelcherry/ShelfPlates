@@ -1,51 +1,73 @@
-import { Image } from "expo-image";
-import { StyleSheet, Text } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 
 export default function HomeScreen() {
-  const shelfArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const shelfArray = Array.from({ length: 36 }, (_, i) => i + 1);
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    >
+    <View style={styles.shelfViewContainer}>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Select A Shelf</ThemedText>
       </ThemedView>
-      <ThemedView style={styles.shelfContainer}>
-        {shelfArray.map((shelf) => {
-          return <Text key={shelf}>{shelf}</Text>;
-        })}
-      </ThemedView>
-    </ParallaxScrollView>
+      <FlatList
+        style={styles.shelfContainer}
+        data={shelfArray}
+        keyExtractor={(item) => item.toString()}
+        numColumns={6}
+        columnWrapperStyle={styles.row}
+        renderItem={({ item }) => (
+          <View style={styles.shelfBtn}>
+            <Text style={styles.shelfBtnText}>{item}</Text>
+          </View>
+        )}
+        contentContainerStyle={styles.shelfContainer}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  shelfViewContainer: {
+    marginTop: 50,
+    padding: 15
+  },
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8
+    gap: 8,
+    marginBottom: 10,
+    backgroundColor: "none"
+  },
+  row: {
+    justifyContent: "space-between",
+    marginBottom: 12
   },
   shelfContainer: {
-    backgroundColor: "green",
-    gap: 8,
-    marginBottom: 8
+    paddingVertical: 8
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute"
+  shelfBtn: {
+    backgroundColor: "#4A6572", // modern blue-grey tone
+    width: 55,
+    height: 55,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+    // subtle shadow for modern look
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3 // Android shadow
+  },
+  shelfBtnText: {
+    color: "#fff",
+    fontSize: 25, // larger text
+    fontWeight: "700", // bold
+    textAlign: "center"
   }
 });
